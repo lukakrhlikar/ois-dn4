@@ -146,7 +146,7 @@ function dodajMeritveVitalnihZnakov() {
 	}
 }
 
-/*
+
 function preberiMeritveVitalnihZnakov() {
 	sessionId = getSessionId();	
 
@@ -251,7 +251,7 @@ function preberiMeritveVitalnihZnakov() {
 	    	}
 		});
 	}
-} */
+}  /*
 function preberiMeritveVitalnihZnakov() {
 	sessionId = getSessionId();	
 
@@ -293,7 +293,7 @@ function preberiMeritveVitalnihZnakov() {
 			});
 		
 		
-}
+} */
 
 
 $(document).ready(function() {
@@ -328,3 +328,8 @@ $(document).ready(function() {
 		$("#meritveVitalnihZnakovEHRid").val($(this).val());
 	});
 });
+
+//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[14]/td[6]/b zenske
+//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[15]/td[6]/b moski
+//#tabele > table:nth-child(1) > tbody > tr > td > div:nth-child(2) > table > tbody > tr:nth-child(15) > td:nth-child(6) > b css moski
+//#tabele > table:nth-child(1) > tbody > tr > td > div:nth-child(2) > table > tbody > tr:nth-child(14) > td:nth-child(6) > b css zenske
