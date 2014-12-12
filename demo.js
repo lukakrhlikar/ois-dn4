@@ -96,10 +96,10 @@ function dodajMeritveVitalnihZnakov() {
 	var datumInUra = $("#dodajVitalnoDatumInUra").val();
 	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").val();
 	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").val();
-	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
+	//var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
 	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
 	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
-	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
+	//var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
 	var merilec = $("#dodajVitalnoMerilec").val();
 
 	if (!ehrId || ehrId.trim().length == 0) {
@@ -115,11 +115,11 @@ function dodajMeritveVitalnihZnakov() {
 		    "ctx/time": datumInUra,
 		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
 		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
-		   	"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
-		    "vital_signs/body_temperature/any_event/temperature|unit": "°C",
+		   	//"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
+		    //"vital_signs/body_temperature/any_event/temperature|unit": "°C",
 		    "vital_signs/blood_pressure/any_event/systolic": sistolicniKrvniTlak,
 		    "vital_signs/blood_pressure/any_event/diastolic": diastolicniKrvniTlak,
-		    "vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom,
+		    //"vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom,
 		};
 		var parametriZahteve = {
 		    "ehrId": ehrId,
@@ -160,7 +160,7 @@ function stevilka(min, max){
 function stevilka2(min, max){
 	var st= Math.floor(Math.random()* (max - min + 1)) + min;
 	if (st < 10){
-		st+= "0";
+		st= "0"+st;
 	}
 	return st;
 }
@@ -168,8 +168,8 @@ function stevilka2(min, max){
 
 function preberiMeritveVitalnihZnakov() {
 	sessionId = getSessionId();	
-
 	var ehrId = $("#meritveVitalnihZnakovEHRid").val();
+	$("#rezultatMeritveVitalnihZnakov").empty();
 			var AQL =	"select " +
 					        "a_a/data[at0002]/events[at0003]/time/value as cas, " +
 					        "a_b/data[at0001]/events[at0006]/data[at0003]/items[at0005]/value/magnitude as tlak_d, " +                                         
@@ -194,7 +194,7 @@ function preberiMeritveVitalnihZnakov() {
 					    		var rows = res.resultSet;
 						        for (var i in rows) {
 						            //results += "<tr><td class='klikablien-datum'>" + rows[i].cas + "</td>";
-						            results += "<tr><td><button type='button' class='klikabilen' value='"+rows[i].cas+"'>"+ rows[i].cas +"</button></td></tr>"
+						            results += "<tr><td><button type='button' class='klikabilen' onclick='preberiMeritveVitalnihZnakov2(this)' value='"+rows[i].cas+"'>"+ rows[i].cas +"</button></td></tr>"
 						            
 						        }
 						        results += "</table>";
@@ -215,6 +215,7 @@ function preberiMeritveVitalnihZnakov() {
 function preberiMeritveVitalnihZnakov2(a){
 		sessionId = getSessionId();	
 	console.log(a);
+	$("#graf").empty();
 	var ehrId = $("#meritveVitalnihZnakovEHRid").val();
 			var AQL =	"select " +
 					        "a_a/data[at0002]/events[at0003]/time/value as cas, " +
@@ -235,33 +236,59 @@ function preberiMeritveVitalnihZnakov2(a){
 					    type: 'GET',
 					    headers: {"Ehr-Session": sessionId},
 					    success: function (res) {
-					    	var results = "<table class='table table-striped table-hover'><tr><th>Datum in ura</th></tr>";
+					    	var results = "<table class='table table-striped table-hover'><tr><th>Graf</th></tr>";
 					    	if (res) {
 					    		var rows = res.resultSet;
 						        for (var i in rows) {
-						            if (rows[i].cas == a){
+						           // if (rows[i].cas == a){
 						            var visina = rows[i].visina;
 						            var teza = rows[i].teza;
 						            var tlak_s = rows[i].tlak_s;
 						            var tlak_d = rows[i].tlak_d;
 						            var bmi = rows[i].teza /((rows[i].visina/100)*(rows[i].visina/100));
 						            var tlakS = rows[i].tlak_s+rows[i].tlak_d;
-						            
 						           	var x=79;
-						           	var y;
-						           	var z;
-						           	if (String(bmi).substring(0,2) >15 && String(bmi).substring(0,2)<25){
-						           		x=79;
-						           	} else {
-						           		
+						           	var y=0;
+						           	var z=0;
+						           	if (bmi >20 && bmi<25){
+						           		y = 79;
+						           	} else if(bmi <20 && bmi>15 ) {
+						           		y = x + 3 ;
+						           	}	else if(bmi <15 ) {
+						           		y = x - 3 ;
+						           	}	else if(bmi > 30 ) {
+						           		y = x - 5 ;
+						           	}	else if(bmi <30 && bmi>25 ) {
+						           		y = x - 3 ;
 						           	}
-						            	
+						            if (tlakS<170){
+						            	z = y - 5;
+						            } else if (tlakS>170 && tlakS<185){
+						            	z= y - 1;
+						            }	else if (tlakS<190 && tlakS>185){
+						            	z= y;
+						            } else if (tlakS>190 && tlakS<200){
+						            	z= y - 1;
+						            } else if (tlakS>200 && tlakS<230){
+						            	z= y - 2;
+						            } else if (tlakS>230 && tlakS<250){
+						            	z= y - 3;
+						            } else if (tlakS>250 && tlakS<300){
+						            	z= y - 4;
+						            } else if (tlakS>300 && tlakS<340){
+						            	z= y - 10;
 						            }
 						            
 						            
+						            
+						            	
+						           // }
+						            
+						            ///graffff
 						        }
+						        console.log(x+" "+y+" "+z);
 						        results += "</table>";
-						        $("#rezultatMeritveVitalnihZnakov").append(results);
+						        $("#graf").append(results);
 						        
 					    	} else {
 					    		$("#preberiMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo label label-warning fade-in'>Ni podatkov!</span>");
@@ -281,7 +308,6 @@ $(document).ready(function() {
 	$('#preberiObstojeciEHR').change(function() {
 		$("#preberiSporocilo").html("");
 		$("#preberiEHRid").val($(this).val());
-		zunanji_vir1();
 	});
 	$('#preberiPredlogoBolnika').change(function() {
 		$("#kreirajSporocilo").html("");
@@ -297,12 +323,12 @@ $(document).ready(function() {
 		$("#dodajVitalnoDatumInUra").val(podatki[1]);
 		$("#dodajVitalnoTelesnaVisina").val(podatki[2]);
 		$("#dodajVitalnoTelesnaTeza").val(podatki[3]);
-		$("#dodajVitalnoTelesnaTemperatura").val(podatki[4]);
-		$("#dodajVitalnoKrvniTlakSistolicni").val(podatki[5]);
-		$("#dodajVitalnoKrvniTlakDiastolicni").val(podatki[6]);
-		$("#dodajVitalnoNasicenostKrviSKisikom").val(podatki[7]);
-		$("#dodajIndeksTelesneMase").val(podatki[8]);
-		$("#dodajVitalnoMerilec").val(podatki[9]);
+		//$("#dodajVitalnoTelesnaTemperatura").val(podatki[4]);
+		$("#dodajVitalnoKrvniTlakSistolicni").val(podatki[4]);
+		$("#dodajVitalnoKrvniTlakDiastolicni").val(podatki[5]);
+		//$("#dodajVitalnoNasicenostKrviSKisikom").val(podatki[7]);
+		//$("#dodajIndeksTelesneMase").val(podatki[8]);
+		$("#dodajVitalnoMerilec").val(podatki[6]);
 	});
 	$('#preberiEhrIdZaVitalneZnake').change(function() {
 		$("#preberiMeritveVitalnihZnakovSporocilo").html("");
@@ -310,9 +336,9 @@ $(document).ready(function() {
 		$("#meritveVitalnihZnakovEHRid").val($(this).val());
 	});
 	
-	$('#klikabilen').change(function() {
-	    alert($(this).html());
-	});
+	/*$(".klikabilen").click(function() {
+	    preberiMeritveVitalnihZnakov2($(this).html());
+	});*/
 
 });
 
@@ -324,9 +350,10 @@ $(document).ready(function() {
 
 
 
-function zunanji_vir1(){
-	var a;
-	a = 'select * from html where url="http://www.stat.si/novica_prikazi.aspx?id=4815" and compat="html5" and xpath="*//td/b"'; //mi najde vse vrednosti treba sam 12, 13
-	console.log(a);
-}
+//function zunanji_vir1(){
+//	var a;
+//	a = 'select * from html where url="http://www.stat.si/novica_prikazi.aspx?id=4815" and compat="html5" and xpath="*//td/b"'; //mi najde vse vrednosti treba sam 12, 13
+//	console.log(a);
+//}
+
 
