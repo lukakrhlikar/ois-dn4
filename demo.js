@@ -115,11 +115,11 @@ function dodajMeritveVitalnihZnakov() {
 		    "ctx/time": datumInUra,
 		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
 		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
-		   	//"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
-		    //"vital_signs/body_temperature/any_event/temperature|unit": "°C",
+		   	"vital_signs/body_temperature/any_event/temperature|magnitude": 0,
+		    "vital_signs/body_temperature/any_event/temperature|unit": "°C",
 		    "vital_signs/blood_pressure/any_event/systolic": sistolicniKrvniTlak,
 		    "vital_signs/blood_pressure/any_event/diastolic": diastolicniKrvniTlak,
-		    //"vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom,
+		    "vital_signs/indirect_oximetry:0/spo2|numerator": 0,
 		};
 		var parametriZahteve = {
 		    "ehrId": ehrId,
@@ -144,7 +144,7 @@ function dodajMeritveVitalnihZnakov() {
 	}
 }
 function generator(){
-	$("#dodajVitalnoDatumInUra").val(stevilka(1994, 2014) +"-"+ stevilka2(1,12)+"-"+stevilka2(1,28)+"T"+stevilka2(0,24)+":"+stevilka2(0,59));
+	$("#dodajVitalnoDatumInUra").val(stevilka(1994, 2014) +"-"+ stevilka2(1,12)+"-"+stevilka2(1,28)+"T"+stevilka2(0,23)+":"+stevilka2(0,59));
 	$("#dodajVitalnoTelesnaVisina").val(stevilka(130, 215));
 	$("#dodajVitalnoTelesnaTeza").val(stevilka(40,180));
 	$("#dodajVitalnoKrvniTlakSistolicni").val(stevilka(50, 220));
@@ -183,7 +183,7 @@ function preberiMeritveVitalnihZnakov() {
 						        "OBSERVATION a_c[openEHR-EHR-OBSERVATION.height.v1] and " +
 						        "OBSERVATION a_a[openEHR-EHR-OBSERVATION.body_temperature.v1] and " +
 						        "OBSERVATION a_b[openEHR-EHR-OBSERVATION.blood_pressure.v1]) " +               
-						"offset 0 limit 4";
+						"offset 0 limit 5";
 			$.ajax({
 					    url: baseUrl + "/query?" + $.param({"aql": AQL}),
 					    type: 'GET',
@@ -194,7 +194,9 @@ function preberiMeritveVitalnihZnakov() {
 					    		var rows = res.resultSet;
 						        for (var i in rows) {
 						            //results += "<tr><td class='klikablien-datum'>" + rows[i].cas + "</td>";
-						            results += "<tr><td><button type='button' class='klikabilen' onclick='preberiMeritveVitalnihZnakov2(this)' value='"+rows[i].cas+"'>"+ rows[i].cas +"</button></td></tr>"
+						         //   results += "<tr><td><button type='button' class='klikabilen' onclick='preberiMeritveVitalnihZnakov2(this)' value='"+rows[i].cas+"'>"+ rows[i].cas +"</button></td></tr>"
+   						            results += "<tr><td><button type='button' class='klikabilen' onclick='preberiMeritveVitalnihZnakov2(this.value)' value='"+rows[i].cas+"'>"+ rows[i].cas +"</button></td></tr>"
+
 						            
 						        }
 						        results += "</table>";
@@ -213,10 +215,12 @@ function preberiMeritveVitalnihZnakov() {
 		
 } 
 function preberiMeritveVitalnihZnakov2(a){
-		sessionId = getSessionId();	
-	console.log(a);
-	$("#graf").empty();
+	sessionId = getSessionId();	
+	
 	var ehrId = $("#meritveVitalnihZnakovEHRid").val();
+	
+	$("#graf").empty();
+	
 			var AQL =	"select " +
 					        "a_a/data[at0002]/events[at0003]/time/value as cas, " +
 					        "a_b/data[at0001]/events[at0006]/data[at0003]/items[at0005]/value/magnitude as tlak_d, " +                                         
@@ -230,7 +234,7 @@ function preberiMeritveVitalnihZnakov2(a){
 						        "OBSERVATION a_c[openEHR-EHR-OBSERVATION.height.v1] and " +
 						        "OBSERVATION a_a[openEHR-EHR-OBSERVATION.body_temperature.v1] and " +
 						        "OBSERVATION a_b[openEHR-EHR-OBSERVATION.blood_pressure.v1]) " +               
-						"offset 0 limit 4";
+						"offset 0 limit 5";
 			$.ajax({
 					    url: baseUrl + "/query?" + $.param({"aql": AQL}),
 					    type: 'GET',
@@ -240,55 +244,55 @@ function preberiMeritveVitalnihZnakov2(a){
 					    	if (res) {
 					    		var rows = res.resultSet;
 						        for (var i in rows) {
-						           // if (rows[i].cas == a){
-						            var visina = rows[i].visina;
-						            var teza = rows[i].teza;
-						            var tlak_s = rows[i].tlak_s;
-						            var tlak_d = rows[i].tlak_d;
-						            var bmi = rows[i].teza /((rows[i].visina/100)*(rows[i].visina/100));
-						            var tlakS = rows[i].tlak_s+rows[i].tlak_d;
-						           	var x=79;
-						           	var y=0;
-						           	var z=0;
-						           	if (bmi >20 && bmi<25){
-						           		y = 79;
-						           	} else if(bmi <20 && bmi>15 ) {
-						           		y = x + 3 ;
-						           	}	else if(bmi <15 ) {
-						           		y = x - 3 ;
-						           	}	else if(bmi > 30 ) {
-						           		y = x - 5 ;
-						           	}	else if(bmi <30 && bmi>25 ) {
-						           		y = x - 3 ;
-						           	}
-						            if (tlakS<170){
-						            	z = y - 5;
-						            } else if (tlakS>170 && tlakS<185){
-						            	z= y - 1;
-						            }	else if (tlakS<190 && tlakS>185){
-						            	z= y;
-						            } else if (tlakS>190 && tlakS<200){
-						            	z= y - 1;
-						            } else if (tlakS>200 && tlakS<230){
-						            	z= y - 2;
-						            } else if (tlakS>230 && tlakS<250){
-						            	z= y - 3;
-						            } else if (tlakS>250 && tlakS<300){
-						            	z= y - 4;
-						            } else if (tlakS>300 && tlakS<340){
-						            	z= y - 10;
-						            }
-						            
-						            
-						            
+						        	
+						            if (rows[i].cas == a){
 						            	
-						           // }
+							            var visina = rows[i].visina;
+							            var teza = rows[i].teza;
+							            var tlak_s = rows[i].tlak_s;
+							            var tlak_d = rows[i].tlak_d;
+							            var bmi = rows[i].teza /((rows[i].visina/100)*(rows[i].visina/100));
+							            var tlakS = rows[i].tlak_s+rows[i].tlak_d;
+							           	var x=79;
+							           	var y=0;
+							           	var z=0;
+							           	if (bmi >20 && bmi<25){
+							           		y = 79;
+							           	} else if(bmi <20 && bmi>15 ) {
+							           		y = x + 3 ;
+							           	}	else if(bmi <15 ) {
+							           		y = x - 3 ;
+							           	}	else if(bmi > 30 ) {
+							           		y = x - 5 ;
+							           	}	else if(bmi <30 && bmi>25 ) {
+							           		y = x - 3 ;
+							           	}
+							            if (tlakS<170){
+							            	z = y - 5;
+							            } else if (tlakS>170 && tlakS<185){
+							            	z= y - 1;
+							            }	else if (tlakS<190 && tlakS>185){
+							            	z= y;
+							            } else if (tlakS>190 && tlakS<200){
+							            	z= y - 1;
+							            } else if (tlakS>200 && tlakS<230){
+							            	z= y - 2;
+							            } else if (tlakS>230 && tlakS<250){
+							            	z= y - 3;
+							            } else if (tlakS>250 && tlakS<300){
+							            	z= y - 4;
+							            } else if (tlakS>300 && tlakS<340){
+							            	z= y - 10;
+							            }
+						            
+						            }
 						            
 						            ///graffff
 						        }
 						        console.log(x+" "+y+" "+z);
 						        results += "</table>";
-						        $("#graf").append(results);
+						        
+						        graf(x, y, z);
 						        
 					    	} else {
 					    		$("#preberiMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo label label-warning fade-in'>Ni podatkov!</span>");
@@ -301,7 +305,101 @@ function preberiMeritveVitalnihZnakov2(a){
 					    }
 					});
 		
-} 
+}
+
+function graf(x, y, z){
+
+	var w = 400;
+	var h = 300;
+	var padding = 30;
+	
+	//The data for our line
+	var lineData = [ { "x": 3,   "y": x},  { "x": 6,  "y": y}, { "x": 9,  "y": z}];
+	
+	var xScale = d3.scale.linear().domain([0, 12]).range([padding, w - padding]);
+	var yScale = d3.scale.linear().domain([60, 90]).range([h - padding, padding]);
+	
+	//The SVG Container
+	var svg = d3.select("#graf").append("svg").style("border", "1px solid red").style("background-color", "black").attr("width", w).attr("height", h);
+	
+	//Define and draw X and Y axes
+	var xAxis = d3.svg.axis()
+	    .scale(xScale)
+	    .orient("bottom")
+	    .ticks(10);
+	
+	var yAxis = d3.svg.axis()
+	    .scale(yScale)
+	    .orient("left")
+	    .ticks(10);
+	
+	/*svg.append("g")
+	    .attr("class", "axis")
+	    .attr("transform", "translate(0," + (h - padding) + ")")
+		.style("fill","red")
+	    .call(xAxis);*/
+	
+	svg.append("g")
+	    .attr("class", "axis")
+	    .attr("transform", "translate(" + padding + ",0)")
+		.style("fill","red")
+	    .call(yAxis);
+	
+	svg.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 40)
+		.attr("x",60 - (h / 2))
+		.attr("dy", "1em")
+		.style("text-anchor", "start")
+		.style("fill","red")
+		.text("Leto");
+	 
+	 var lineFunction = d3.svg.line()
+	                          .x(function(d) { return xScale(d.x); })
+	                          .y(function(d) { return yScale(d.y); })
+	                         .interpolate("linear");
+	
+	
+	
+	
+	var lineGraph = svg.append("path")
+	                            .attr("d", lineFunction(lineData))
+	                           .attr("stroke", "red")
+	                            .attr("stroke-width", 2)
+	                            .attr("fill", "none");
+	
+	
+	 var circles = svg.selectAll("circle").data(lineData).enter().append("circle");
+	 var circleAttributes = 
+	 circles.attr("cx", function(d) { return xScale(d.x); }).attr("cy", function(d) { return yScale(d.y); }).attr("r", function (d) { return 10; }).style("fill", function(d,i)
+	 	{
+	 		if (i == 0) return "red";
+	 		else if (i == 1) return "green";
+	 		else if (i == 2) return "orange";
+	 	});
+	
+	 svg.append("text")
+	 .attr("x",xScale(2))
+	 .attr("y",yScale(88))
+	 .style("fill","red")
+	 .style("text-anchor", "start")
+	 .text("Povprečna starost");
+	
+	 svg.append("text")
+	 .attr("x",xScale(2))
+	 .attr("y",yScale(86))
+	 .style("fill","green")
+	 .style("text-anchor", "start")
+	 .text("Indeks telesne mase");
+	
+	 svg.append("text")
+	 .attr("x",xScale(2))
+	 .attr("y",yScale(84))
+	 .style("fill","orange")
+	 .style("text-anchor", "start")
+         .text("Pritisk");
+
+}
 
 
 $(document).ready(function() {
@@ -334,6 +432,9 @@ $(document).ready(function() {
 		$("#preberiMeritveVitalnihZnakovSporocilo").html("");
 		$("#rezultatMeritveVitalnihZnakov").html("");
 		$("#meritveVitalnihZnakovEHRid").val($(this).val());
+		
+		// Skrij graf
+		$("#graf").empty();
 	});
 	
 	/*$(".klikabilen").click(function() {
