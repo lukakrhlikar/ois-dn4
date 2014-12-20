@@ -443,8 +443,8 @@ $(document).ready(function() {
 
 });
 
-//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[14]/td[6]/b zenske
-//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[15]/td[6]/b moski
+//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[14]/td[6]/b zenske 82,9 let
+//*[@id="tabele"]/table[1]/tbody/tr/td/div[2]/table/tbody/tr[15]/td[6]/b moski  76,6 let
 //#tabele > table:nth-child(1) > tbody > tr > td > div:nth-child(2) > table > tbody > tr:nth-child(15) > td:nth-child(6) > b css moski
 //#tabele > table:nth-child(1) > tbody > tr > td > div:nth-child(2) > table > tbody > tr:nth-child(14) > td:nth-child(6) > b css zenske
 //http://www.stat.si/novica_prikazi.aspx?id=4815

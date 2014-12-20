@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<div class="row">
-		<div class="col-lg-2 col-md-2 col-sm-2"><h1 style="color:white;background-color:black;"> LETO SMRTI :)</h1></div>
+		<div class="col-lg-2 col-md-2 col-sm-2"><h1 style="color:black;background-color:white;"> LETO SMRTI :)</h1></div>
 		</div>
 		<div class="row"><!--to je 1 vrstica -->
 			<div class="col-lg-6 col-md-6 col-sm-6">
@@ -52,7 +52,7 @@
 						<span class="label label-default">Ime</span><input id="kreirajIme" type="text" class="form-control input-mini" placeholder="Osama">
 						<span class="label label-default">Priimek</span><input id="kreirajPriimek" type="text" class="form-control" placeholder="Bin Laden">
 						<span class="label label-default">Datum rojstva</span><input id="kreirajDatumRojstva" type="text" class="form-control" placeholder="1957-03-10T09:08">
-						<button type="button" class="btn btn-primary btn-xs" onclick="kreirajEHRzaBolnika()">Dodaj osnovne podatke o prebivalcu</button><span id="kreirajSporocilo"></span>
+						<button type="button" class="btn btn-primary btn-xs" onclick="kreirajEHRzaBolnika()">Dodaj prebivalca</button><span id="kreirajSporocilo"></span>
 				  	</div>
 				</div>
 			</div>
@@ -61,16 +61,16 @@
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<div class="row" title="Izberi prebivalca in datum pregleda in dobil boš graf, kateri ti pove okvirno leto smrti glede na vitalne podatke na pregledu!">
+						<div class="row" title="Izberi prebivalca in datum pregleda in dobil boš graf, ki ti prikaže okvirno leto smrti glede na vitalne podatke na pregledu.">
 							<div class="col-lg-6 col-md-6 col-sm-6"><b>Pregled meritev vitalnih znakov prebivalca</b></div>
-							<div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control input-sm" id="preberiEhrIdZaVitalneZnake"><option value=""></option><option value="b931580f-2b05-488b-985b-8d9ffb08ad02">Ata Smrk</option><option value="76c6f6ee-aeb9-48e7-bffe-57ac29906979">Mojster Miha</option><option value="b52fa697-3442-4a0d-aaa3-a2a4996ae881">Han Solo</option><option value="aac72718-e8b6-4bb8-993f-41921588348c">Homo Sapiens</option></select></div>
+							<div class="col-lg-6 col-md-6 col-sm-6"><select class="form-control input-sm" id="preberiEhrIdZaVitalneZnake"><option value=""></option><option value="1a26b316-a50b-41f2-a780-ca4ceec66e0e">Miha Novak</option><option value="76c6f6ee-aeb9-48e7-bffe-57ac29906979">Mojster Miha</option><option value="b52fa697-3442-4a0d-aaa3-a2a4996ae881">Han Solo</option><option value="aac72718-e8b6-4bb8-993f-41921588348c">Homo Sapiens</option></select></div>
 						</div>
 					</div>				
 					<div class="panel-body">
 						<span class="label label-default">EHR ID</span><input id="meritveVitalnihZnakovEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
 						<button type="button" class="btn btn-primary btn-xs" onclick="preberiMeritveVitalnihZnakov('telesna temperatura')">Preberi meritve vitalnih znakov</button><span id="preberiMeritveVitalnihZnakovSporocilo"></span>
 						<div id="rezultatMeritveVitalnihZnakov"></div>
-						<div id="graf"></div>
+						<div id="graf" title="Graf vam prikaže povprečno starost prebivalca in njegovo pričakovano leto smrti glede na vitalne znake, ki so bili izmerjeni na izbranem pregledu."></div>
 				  	</div>
 				</div>			
 			</div>
