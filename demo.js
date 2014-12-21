@@ -256,33 +256,35 @@ function preberiMeritveVitalnihZnakov2(a){
 							           	var x=79;
 							           	var y=0;
 							           	var z=0;
-							           	if (bmi >20 && bmi<25){
-							           		y = 79;
-							           	} else if(bmi <20 && bmi>15 ) {
+							           	if (bmi >=20 && bmi<25){
+							           		y = x;
+							           	} else if(bmi <20 && bmi>=15 ) {
 							           		y = x + 3 ;
 							           	}	else if(bmi <15 ) {
 							           		y = x - 3 ;
-							           	}	else if(bmi > 30 ) {
+							           	}	else if(bmi >=30 ) {
 							           		y = x - 5 ;
-							           	}	else if(bmi <30 && bmi>25 ) {
+							           	}	else if(bmi <30 && bmi>=25 ) {
 							           		y = x - 3 ;
 							           	}
-							            if (tlakS<170){
+							            if (tlakS<=170){
 							            	z = y - 5;
-							            } else if (tlakS>170 && tlakS<185){
+							            } else if (tlakS>170 && tlakS<=185){
 							            	z= y - 1;
-							            }	else if (tlakS<190 && tlakS>185){
+							            }	else if (tlakS<=190 && tlakS>185){
 							            	z= y;
-							            } else if (tlakS>190 && tlakS<200){
+							            } else if (tlakS>190 && tlakS<=200){
 							            	z= y - 1;
-							            } else if (tlakS>200 && tlakS<230){
+							            } else if (tlakS>200 && tlakS<=230){
 							            	z= y - 2;
-							            } else if (tlakS>230 && tlakS<250){
+							            } else if (tlakS>230 && tlakS<=250){
 							            	z= y - 3;
-							            } else if (tlakS>250 && tlakS<300){
+							            } else if (tlakS>250 && tlakS<=300){
 							            	z= y - 4;
-							            } else if (tlakS>300 && tlakS<340){
+							            } else if (tlakS>300 && tlakS<=340){
 							            	z= y - 10;
+							            } else if (tlakS>340){
+							            	z= y - 15;
 							            }
 						            
 						            }
@@ -348,11 +350,11 @@ function graf(x, y, z){
 	svg.append("text")
 		.attr("transform", "rotate(-90)")
 		.attr("y", 40)
-		.attr("x",60 - (h / 2))
+		.attr("x",-50 - (h / 2))
 		.attr("dy", "1em")
 		.style("text-anchor", "start")
 		.style("fill","red")
-		.text("Leto");
+		.text("Pričakovana starost ob smrti");
 	 
 	 var lineFunction = d3.svg.line()
 	                          .x(function(d) { return xScale(d.x); })
@@ -383,21 +385,21 @@ function graf(x, y, z){
 	 .attr("y",yScale(88))
 	 .style("fill","red")
 	 .style("text-anchor", "start")
-	 .text("Povprečna starost");
+	 .text("Povprečna starost (" + x+ " let)");
 	
 	 svg.append("text")
 	 .attr("x",xScale(2))
 	 .attr("y",yScale(86))
 	 .style("fill","green")
 	 .style("text-anchor", "start")
-	 .text("Indeks telesne mase");
+	 .text("Indeks telesne mase ("+ y+ " let)" );
 	
 	 svg.append("text")
 	 .attr("x",xScale(2))
 	 .attr("y",yScale(84))
 	 .style("fill","orange")
 	 .style("text-anchor", "start")
-         .text("Pritisk");
+         .text("Pritisk (" + z +" let)");
 
 }
 
